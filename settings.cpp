@@ -35,6 +35,8 @@ void Settings::readSettings(){
         i.next();
         if(!root.contains(i.key())){
             insertInFile(i.key(),i.value());
+        }else{
+            All_QString_PARAMS[i.key()]=root[i.key()].toString();
         }
     };
 }
@@ -75,6 +77,13 @@ void Settings::makeGui(){
     row3->addWidget(update);
     row3->addWidget(clear);
     mainLayout->addLayout(row3);
+
+    QHBoxLayout *row4=new QHBoxLayout(this);
+    mainLayout->addLayout(row4);
+    row4->addWidget(new QLabel("path to image (.../...) ",this));
+    path_to_image=new QLineEdit(this);
+    row4->addWidget(path_to_image);
+
     connect(update, SIGNAL(clicked()), this, SLOT(update()));
     connect(clear, SIGNAL(clicked()), this, SLOT(clear()));
 }
@@ -82,6 +91,7 @@ void Settings::makeGui(){
 void Settings::update(){
     All_QString_PARAMS["path_db"]=pathToDB->text();
     All_QString_PARAMS["font_size"]=font_size->text();
+    All_QString_PARAMS["path_to_image"]=path_to_image->text();
     QMapIterator<QString, QString> i(All_QString_PARAMS);
     while (i.hasNext()) {
         i.next();
@@ -92,6 +102,7 @@ void Settings::update(){
 void Settings::clear(){
     pathToDB->setText(All_QString_PARAMS["path_db"]);
     font_size->setText(All_QString_PARAMS["font_size"]);
+    path_to_image->setText(All_QString_PARAMS["path_to_image"]);
 }
 
 void insertInFile(QString key,QString value){

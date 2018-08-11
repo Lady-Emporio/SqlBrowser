@@ -36,6 +36,7 @@ class Settings : public QWidget
 
     QLineEdit *font_size;
     QLineEdit *pathToDB;
+    QLineEdit *path_to_image;
 public:
     static Settings *S();
     static QString get(QString param);
