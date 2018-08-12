@@ -27,9 +27,7 @@ Browser::Browser(QWidget *parent)
     mainMenu->addAction("Model",this,SLOT(action_Model()));
     QMenu * sizeComands=new QMenu("Size",this);
     mainMenu->addMenu(sizeComands);
-    sizeComands->addAction("clear",this,SLOT(action_size_default()));
-    sizeComands->addAction("sql text",this,SLOT(action_sql_text_size()));
-    sizeComands->addAction("return text",this,SLOT(action_return_text_size()));
+    sizeComands->addAction("size",this,SLOT(action_size()));
 
     mdiArea = new QMdiArea(this);
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -37,37 +35,11 @@ Browser::Browser(QWidget *parent)
     setCentralWidget(mdiArea);
 }
 
-void Browser::action_size_default(){
+void Browser::action_size(){
     if(mdiArea->activeSubWindow()!=0){
-        if(mdiArea->activeSubWindow()->widget()->objectName().startsWith("SqlBrowser")){
-            SqlBrowser*sql=reinterpret_cast<SqlBrowser*>( mdiArea->activeSubWindow()->widget() );
-            sql->sql_text->setMinimumSize(10, 10);
-            sql->sql_text->setMaximumSize(1000,1000);
-            sql->return_text->setMinimumSize(10, 10);
-            sql->return_text->setMaximumSize(1000,1000);
-        };
-    };
-}
-
-void Browser::action_sql_text_size(){
-    if(mdiArea->activeSubWindow()!=0){
-        if(mdiArea->activeSubWindow()->widget()->objectName().startsWith("SqlBrowser")){
-            SqlBrowser*sql=reinterpret_cast<SqlBrowser*>( mdiArea->activeSubWindow()->widget() );
-            sql->sql_text->setFixedWidth(sql->width()*0.8);
-            sql->return_text->setMinimumSize(10, 10);
-            sql->return_text->setMaximumSize(1000,1000);
-        };
-    };
-}
-
-void Browser::action_return_text_size(){
-    if(mdiArea->activeSubWindow()!=0){
-        if(mdiArea->activeSubWindow()->widget()->objectName().startsWith("SqlBrowser")){
-            SqlBrowser*sql=reinterpret_cast<SqlBrowser*>( mdiArea->activeSubWindow()->widget() );
-            sql->return_text->setFixedWidth(sql->width()*0.8);
-            sql->sql_text->setMinimumSize(10, 10);
-            sql->sql_text->setMaximumSize(1000,1000);
-        };
+        qDebug()<<mdiArea->activeSubWindow()->widget()->objectName();
+    }else{
+       qDebug()<<"Zero";
     };
 }
 

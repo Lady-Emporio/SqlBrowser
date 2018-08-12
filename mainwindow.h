@@ -42,6 +42,9 @@ public slots:
     void action_Settings();
     void action_SQL();
     void action_Model();
+    void action_size_default();
+    void action_sql_text_size();
+    void action_return_text_size();
 };
 
 class SqlBrowser : public QWidget
