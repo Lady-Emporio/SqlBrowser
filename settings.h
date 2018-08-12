@@ -24,6 +24,7 @@
 #include <QGroupBox>
 #include <QCheckBox>
 #include <QGridLayout>
+#include <QHeaderView>
 void insertInFile(QString key,QString value);
 
 class Settings : public QWidget
@@ -49,5 +50,4 @@ public slots:
     void update();
     void clear();
 };
-
 #endif // SETTINGS_H

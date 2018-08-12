@@ -23,6 +23,7 @@
 #include <QMenu>
 #include <QString>
 #include <QMdiSubWindow>
+#include <QTableWidget>
 void GetErrorMessage(QSqlDatabase *db, QString transaction_name);
 class SqlBrowser;
 
@@ -40,6 +41,7 @@ public slots:
     void closeAndUpdate();
     void action_Settings();
     void action_SQL();
+    void action_Model();
 };
 
 class SqlBrowser : public QWidget

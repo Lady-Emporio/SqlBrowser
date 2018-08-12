@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "settings.h"
+#include "model.h"
 saveMdiSub::saveMdiSub(QWidget *parent) :QMdiSubWindow(parent){}
 void saveMdiSub::closeEvent(QCloseEvent *event){
     if(this->widget()->objectName()=="Settings"){
@@ -23,11 +24,21 @@ Browser::Browser(QWidget *parent)
     popularComands->addAction("select * from ...",this,SLOT(action_Sql_all_for_all()));
 
     mainMenu->addAction("Settings",this,SLOT(action_Settings()));
+    mainMenu->addAction("Model",this,SLOT(action_Model()));
 
     mdiArea = new QMdiArea(this);
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setCentralWidget(mdiArea);
+}
+void Browser::action_Model(){
+    saveMdiSub *subWindow1 = new saveMdiSub;
+    Model *i=new Model(this);
+    subWindow1->setWindowTitle(i->objectName());
+    subWindow1->setWidget(i);
+    mdiArea->addSubWindow(subWindow1);
+    subWindow1->setAttribute(Qt::WA_DeleteOnClose);
+    subWindow1->show();
 }
 
 void Browser::action_SQL(){
