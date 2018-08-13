@@ -228,7 +228,7 @@ void SqlBrowser::runSql(){
             msgBox.setText(db.lastError().text()+" | "+query.lastError().text());
             msgBox.exec();
             query.finish();
-            rec="**********\n"+db.lastError().text()+" | "+query.lastError().text()+"\n"+next_sql+"\n*********\n";
+            rec+="**********\n"+db.lastError().text()+" | "+query.lastError().text()+"\n"+next_sql+"\n*********\n";
             continue;
         };
         while (query.next()) {
