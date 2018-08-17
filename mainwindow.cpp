@@ -215,7 +215,11 @@ void SqlBrowser::runSql(){
         GetErrorMessage(&db,transaction_name);
         return;
     };
+    db.exec("PRAGMA foreign_keys = ON;");
     QSqlQuery query(db);
+
+
+
     QString text=this->sql_text->toPlainText();
     QStringList sqlTasks=text.split(";");
     QString rec;
