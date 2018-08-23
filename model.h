@@ -45,6 +45,9 @@ signals:
 
 public slots:
     void updateModel();
+    void commitModel();
+    void addRow();
+    void delete_row();
 };
 
 #endif // MODEL_H

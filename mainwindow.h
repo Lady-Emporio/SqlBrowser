@@ -45,6 +45,7 @@ public slots:
     void action_size_default();
     void action_sql_text_size();
     void action_return_text_size();
+    void action_bigSql();
 };
 
 class SqlBrowser : public QWidget
@@ -54,10 +55,11 @@ class SqlBrowser : public QWidget
 public:
     QTextEdit * sql_text;
     QTextEdit * return_text;
-    SqlBrowser(QWidget *parent = 0);
+    SqlBrowser(QWidget *parent = 0,QString parameters="None");
     QString path_db;
 public slots:
     void runSql();
+    void BigSql();
 };
 
 class saveMdiSub : public QMdiSubWindow
@@ -72,4 +74,5 @@ private:
     void closeEvent(QCloseEvent *);
 private slots:
 };
+
 #endif // BROWSER_H

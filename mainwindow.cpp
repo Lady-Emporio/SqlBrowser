@@ -25,6 +25,7 @@ Browser::Browser(QWidget *parent)
 
     mainMenu->addAction("Settings",this,SLOT(action_Settings()));
     mainMenu->addAction("Model",this,SLOT(action_Model()));
+    mainMenu->addAction("Big sql",this,SLOT(action_bigSql()));
     QMenu * sizeComands=new QMenu("Size",this);
     mainMenu->addMenu(sizeComands);
     sizeComands->addAction("clear",this,SLOT(action_size_default()));
@@ -69,6 +70,17 @@ void Browser::action_return_text_size(){
             sql->sql_text->setMaximumSize(1000,1000);
         };
     };
+}
+
+void Browser::action_bigSql()
+{
+    saveMdiSub *subWindow1 = new saveMdiSub;
+    SqlBrowser *i=new SqlBrowser(this,"BigSql");
+    subWindow1->setWindowTitle(i->objectName());
+    subWindow1->setWidget(i);
+    mdiArea->addSubWindow(subWindow1);
+    subWindow1->setAttribute(Qt::WA_DeleteOnClose);
+    subWindow1->show();
 }
 
 void Browser::action_Model(){
@@ -178,13 +190,19 @@ void Browser::action_Sql_all_for_all()
     i->sql_text->setPlainText(rec);
 }
 
-SqlBrowser::SqlBrowser(QWidget *parent) : QWidget(parent)
+SqlBrowser::SqlBrowser(QWidget *parent, QString parameters) : QWidget(parent)
 {
-    static int counter=0;
-    QString thisObjectName="SqlBrowser"+QString("").setNum(counter);
-    this->setObjectName(thisObjectName);
-    ++counter;
-
+    static int counterSqlBrowser=0;
+    static int counterBigSql=0;
+    if(parameters=="None"){
+        QString thisObjectName="SqlBrowser"+QString("").setNum(counterSqlBrowser);
+        this->setObjectName(thisObjectName);
+        ++counterSqlBrowser;
+    }else if(parameters=="BigSql"){
+        QString thisObjectName="Big SQL"+QString("").setNum(counterBigSql);
+        this->setObjectName(thisObjectName);
+        ++counterBigSql;
+    }
     QVBoxLayout * mainLayout=new QVBoxLayout(this);
     sql_text = new QTextEdit(this);
     QFont font("Times New Roman", Settings::get("font_size").toInt(), QFont::Normal);
@@ -198,8 +216,11 @@ SqlBrowser::SqlBrowser(QWidget *parent) : QWidget(parent)
     mainLayout->addLayout(group1);
     mainLayout->addWidget(run_button);
     this->setLayout(mainLayout);
-    connect(run_button, SIGNAL(clicked()), this, SLOT(runSql()));
-
+    if(parameters=="None"){
+        connect(run_button, SIGNAL(clicked()), this, SLOT(runSql()));
+    }else if(parameters=="BigSql"){
+        connect(run_button, SIGNAL(clicked()), this, SLOT(BigSql()));
+    }
     path_db=Settings::get("path_db");
 
 }
@@ -244,6 +265,46 @@ void SqlBrowser::runSql(){
             rec+="\n";
         };
         rec+="-----------------\n";
+    };
+    return_text->setPlainText(rec);
+    query.finish();
+    db.commit();
+    db.close();
+    db=QSqlDatabase();
+    QSqlDatabase::removeDatabase(transaction_name);
+}
+
+void SqlBrowser::BigSql()
+{
+    return_text->setPlainText("");
+
+    QString transaction_name="BigSQl";
+    QMessageBox msgBox;
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE",transaction_name);
+    db.setDatabaseName(path_db);//Имя базы.
+    if (!db.open()){
+        GetErrorMessage(&db,transaction_name);
+        return;
+    };
+    db.exec("PRAGMA foreign_keys = ON;");
+    QSqlQuery query(db);
+
+
+
+    QString text=this->sql_text->toPlainText();
+
+    if(!query.exec(text)){
+            GetErrorMessage(&db,transaction_name);
+            return;
+    };
+    QString rec;
+    while (query.next()) {
+            int max=query.record().count();
+            for(int i=0;i<max;++i){
+                rec+=query.value(i).toString();
+                rec+=" | ";
+            };
+            rec+="\n";
     };
     return_text->setPlainText(rec);
     query.finish();
