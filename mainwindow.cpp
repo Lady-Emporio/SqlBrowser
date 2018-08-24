@@ -244,6 +244,7 @@ void SqlBrowser::runSql(){
     QString text=this->sql_text->toPlainText();
     QStringList sqlTasks=text.split(";");
     QString rec;
+    QString sqlToFile;
     for (int i=0;i!=sqlTasks.length();++i){
         QString next_sql=sqlTasks[i];
         if(next_sql.isEmpty() || next_sql==" " || next_sql=="\n"){
@@ -253,9 +254,11 @@ void SqlBrowser::runSql(){
             msgBox.setText(db.lastError().text()+" | "+query.lastError().text());
             msgBox.exec();
             query.finish();
-            rec+="**********\n"+db.lastError().text()+" | "+query.lastError().text()+"\n"+next_sql+"\n*********\n";
+            QString time=QDateTime::currentDateTime().toString("yyyy.MM.dd*HH:mm:ss");
+            rec+="**"+time+"******\n"+db.lastError().text()+" | "+query.lastError().text()+"\n"+next_sql+"\n*********\n";
             continue;
         };
+        sqlToFile+=query.lastQuery()+"\n-  -  -  -  -  -  -\n";
         while (query.next()) {
             int max=query.record().count();
             for(int i=0;i<max;++i){
@@ -264,8 +267,12 @@ void SqlBrowser::runSql(){
             };
             rec+="\n";
         };
-        rec+="-----------------\n";
+        QString time=QDateTime::currentDateTime().toString("yyyy.MM.dd*HH:mm:ss");
+        rec+="-------"+time+"----------\n";
     };
+    QString time=QDateTime::currentDateTime().toString("yyyy.MM.dd*HH:mm:ss");
+    sqlToFile+="-------"+time+"----------\n";
+    Settings::S()->writeInFile(sqlToFile);
     return_text->setPlainText(rec);
     query.finish();
     db.commit();
@@ -294,9 +301,12 @@ void SqlBrowser::BigSql()
     QString text=this->sql_text->toPlainText();
 
     if(!query.exec(text)){
-            GetErrorMessage(&db,transaction_name);
+            QMessageBox msgBox;
+            msgBox.setText(db.lastError().text()+" | "+query.lastError().text());
+            msgBox.exec();
             return;
     };
+    Settings::S()->writeInFile(query.lastQuery());
     QString rec;
     while (query.next()) {
             int max=query.record().count();
@@ -306,6 +316,9 @@ void SqlBrowser::BigSql()
             };
             rec+="\n";
     };
+    QString time=QDateTime::currentDateTime().toString("yyyy.MM.dd*HH:mm:ss");
+    rec+="";
+    rec+="-------"+time+"----------\n";
     return_text->setPlainText(rec);
     query.finish();
     db.commit();

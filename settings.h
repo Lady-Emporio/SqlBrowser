@@ -38,12 +38,14 @@ class Settings : public QWidget
     QLineEdit *font_size;
     QLineEdit *pathToDB;
     QLineEdit *path_to_image;
+    QFile file;
 public:
     static Settings *S();
     static QString get(QString param);
     static void set(QString param,QString value);
     void readSettings();
     void writeSettings();
+    void writeInFile(QString text);
 signals:
 
 public slots:

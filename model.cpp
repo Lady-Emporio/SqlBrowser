@@ -58,7 +58,11 @@ void Model::updateModel(){
 
 void Model::commitModel()
 {
-    model->submitAll();
+    if(!model->submitAll()){
+        QMessageBox msgBox;
+        msgBox.setText(model->lastError().text());
+        msgBox.exec();
+    }
 }
 
 void Model::addRow()

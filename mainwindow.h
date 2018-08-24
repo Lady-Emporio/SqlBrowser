@@ -24,6 +24,7 @@
 #include <QString>
 #include <QMdiSubWindow>
 #include <QTableWidget>
+#include <QDateTime>
 void GetErrorMessage(QSqlDatabase *db, QString transaction_name);
 class SqlBrowser;
 

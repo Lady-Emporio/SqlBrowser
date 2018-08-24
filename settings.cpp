@@ -3,6 +3,7 @@
 Settings::Settings(QWidget *parent) : QWidget(parent)
 {
     this->setObjectName("Settings");
+    file.setFileName("./log.txt");
     All_QString_PARAMS.insert("path_db", "MainDB.sqlite");
     All_QString_PARAMS.insert("font_size", "15");
     All_QString_PARAMS.insert("path_to_image", "./Internet Explorer_32.png");
@@ -55,6 +56,25 @@ void Settings::writeSettings(){
     jsonFile.open(QFile::WriteOnly);
     jsonFile.write(new_doc.toJson());
     jsonFile.close();
+}
+
+void Settings::writeInFile(QString text)
+{
+    if(file.size()>500000000){
+        QMessageBox msgBox;
+        msgBox.setText("./log.txt: VERY BIG size");
+        msgBox.exec();
+        return;
+    }
+    if (!file.open(QIODevice::Append | QIODevice::Text))
+    {
+        QMessageBox msgBox;
+        msgBox.setText("./log.txt: "+file.errorString());
+        msgBox.exec();
+    }
+    text+="\n********************\n";
+    file.write(text.toStdString().c_str());
+    file.close();
 }
 
 void Settings::makeGui(){
