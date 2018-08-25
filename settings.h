@@ -25,6 +25,7 @@
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QHeaderView>
+#include <QFileDialog>
 void insertInFile(QString key,QString value);
 
 class Settings : public QWidget
@@ -51,5 +52,6 @@ signals:
 public slots:
     void update();
     void clear();
+    void chooseFile();
 };
 #endif // SETTINGS_H

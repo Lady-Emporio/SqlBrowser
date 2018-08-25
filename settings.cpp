@@ -85,6 +85,9 @@ void Settings::makeGui(){
     row1->addWidget(new QLabel("path to db (.../...) ",this));
     pathToDB=new QLineEdit(this);
     row1->addWidget(pathToDB);
+
+    QPushButton *DialogFileChoose=new QPushButton("Choose file",this);
+    row1->addWidget(DialogFileChoose);
     QHBoxLayout *row2=new QHBoxLayout(this);
     mainLayout->addLayout(row2);
     row2->addWidget(new QLabel("SQL font size",this));
@@ -106,6 +109,7 @@ void Settings::makeGui(){
 
     connect(update, SIGNAL(clicked()), this, SLOT(update()));
     connect(clear, SIGNAL(clicked()), this, SLOT(clear()));
+    connect(DialogFileChoose, SIGNAL(clicked()), this, SLOT(chooseFile()));
 }
 
 void Settings::update(){
@@ -123,6 +127,12 @@ void Settings::clear(){
     pathToDB->setText(All_QString_PARAMS["path_db"]);
     font_size->setText(All_QString_PARAMS["font_size"]);
     path_to_image->setText(All_QString_PARAMS["path_to_image"]);
+}
+
+void Settings::chooseFile()
+{
+    QString str = QFileDialog::getOpenFileName(this,"Choose db","./");
+    pathToDB->setText(str);
 }
 
 void insertInFile(QString key,QString value){
